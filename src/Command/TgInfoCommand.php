@@ -2,7 +2,8 @@
 
 namespace App\Command;
 
-use App\Http\Client\TgHttpClient;
+use App\Tgrm\Method\GetMe;
+use App\Tgrm\TgrmService;
 use Symfony\Component\Console\Attribute\AsCommand;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputArgument;
@@ -16,13 +17,13 @@ use Symfony\Component\Console\Style\SymfonyStyle;
 )]
 class TgInfoCommand extends Command
 {
-    private $client;
+    private $tgService;
 
-    public function __construct(string $name = null, TgHttpClient $client)
+    public function __construct(string $name = null, TgrmService $tgrm)
     {
         parent::__construct($name);
 
-        $this->client = $client;
+        $this->tgService = $tgrm;
     }
 
     protected function configure(): void
@@ -35,7 +36,8 @@ class TgInfoCommand extends Command
     protected function execute(InputInterface $input, OutputInterface $output): int
     {
         $io = new SymfonyStyle($input, $output);
-        $result = $this->client->getMe();
+
+        $result = $this->tgService->call(new GetMe());
 
         $io->success( sprintf('User #%d (%s)',  $result->id,  $result->username));
 
@@ -43,7 +45,10 @@ class TgInfoCommand extends Command
             ['ID' => $result->id],
             ['First Name' => $result->firstName],
             ['Is Bot' => $result->isBot],
+            ['Language' => $result->languageCode],
         );
+
+        $io->success('Success');
 
         return Command::SUCCESS;
     }

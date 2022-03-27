@@ -1,8 +1,8 @@
 <?php
 
-namespace App\Model\DTO;
+namespace App\Tgrm\Type;
 
-class User
+class User extends TgrmType
 {
     public int $id;
 
@@ -14,11 +14,11 @@ class User
 
     public ?string $username;
 
-    public ?string $languageCode;
+    public ?string $languageCode = null;
 
     public ?bool $canJoinGroups;
 
     public ?bool $canReadAllGroupMessages;
 
-    public ?bool $supportInlineQueries;
+    public ?bool $supportsInlineQueries;
 }
